@@ -1,0 +1,19 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Outfit:wght@100..900&display=swap');
+
+@import "tailwindcss";
+
+@theme {
+  --bg-primary: #e6e6ff;
+  --font-mont: "Montserrat";
+}
+
+:root {
+  background: var(--bg-primary);
+  font-family: var(--font-mont);
+  width: 100vw;
+  overflow-x: hidden;
+}
+
+.animatedButton {
+  animation-duration: 10000ms;
+}
