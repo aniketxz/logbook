@@ -17,3 +17,7 @@
 .animatedButton {
   animation-duration: 10000ms;
 }
+
+button {
+  cursor: pointer;
+}
