@@ -4,13 +4,32 @@ import userRouter from './routes/user.route.js'
 import postRouter from './routes/post.route.js'
 import commentRouter from './routes/comment.route.js'
 import webhookRouter from './routes/webhook.route.js'
+import { clerkMiddleware, getAuth, requireAuth } from '@clerk/express'
 
 const app = express()
+app.use(clerkMiddleware())
 app.use('/webhooks', webhookRouter)
 app.use(express.json())
 
 // app.get('/test', (req, res) => {
 //   res.status(200).send('it works!')
+// })
+
+// app.get('/auth-state', (req, res) => {
+// 	const authState = req.auth()
+// 	res.json(authState)
+// })
+
+// app.get('/protect', (req, res) => {
+// 	const { userId } = getAuth(req)
+// 	if (!userId) {
+// 		return res.status(401).json("Not Authenticated")
+// 	}
+// 	res.status(200).json("content")
+// })
+
+// app.get('/protect', requireAuth(), (req, res) => {
+// 	res.status(200).json('content')
 // })
 
 app.use('/users', userRouter)
