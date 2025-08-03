@@ -6,6 +6,7 @@ import Register from './pages/Register'
 import SinglePost from './pages/SinglePost'
 import Write from './pages/Write'
 import PostListPage from './pages/PostListPage'
+import { Toaster } from 'react-hot-toast'
 
 function App() {
 	return (
@@ -20,6 +21,7 @@ function App() {
 					<Route path='/register' element={<Register />} />
 				</Route>
 			</Routes>
+			<Toaster position='bottom-right' />
 		</>
 	)
 }
