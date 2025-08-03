@@ -1,29 +1,37 @@
 import { useAuth, useUser } from '@clerk/clerk-react'
-import { useEffect, useRef } from 'react'
-import Quill from 'quill'
-import 'quill/dist/quill.snow.css'
+import { useEffect, useState } from 'react'
 import axios from 'axios'
 import { useMutation } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
 import toast from 'react-hot-toast'
+import Upload from '../components/Upload'
+import 'react-quill-new/dist/quill.snow.css'
+import ReactQuill from 'react-quill-new'
 
 const Write = () => {
 	const { isLoaded, isSignedIn } = useUser()
 	const { getToken } = useAuth()
-	const editorRef = useRef(null)
-	const quillRef = useRef(null)
+
+	const [value, setValue] = useState('')
+	const [cover, setCover] = useState('')
+	const [img, setImg] = useState('')
+	const [video, setVideo] = useState('')
+	const [progress, setProgress] = useState(0)
+
+	useEffect(() => {
+		img && setValue((prev) => prev + `<p><img src='${img.url}'/></p>`)
+	}, [img])
+
+	useEffect(() => {
+		video &&
+			setValue(
+				(prev) => prev + `<p><iframe class='ql-video' src='${video.url}'/></p>`
+			)
+	}, [video])
 
 	const BASE_URL = import.meta.env.VITE_API_URL
 
 	const navigate = useNavigate()
-
-	useEffect(() => {
-		if (!quillRef.current && editorRef.current) {
-			quillRef.current = new Quill(editorRef.current, {
-				theme: 'snow',
-			})
-		}
-	}, [isLoaded])
 
 	const mutation = useMutation({
 		mutationFn: async (newPost) => {
@@ -37,7 +45,7 @@ const Write = () => {
 		onSuccess: (res) => {
 			toast.success('Post created successfully!')
 			navigate(`/${res.data.slug}`)
-		}
+		},
 	})
 
 	if (!isLoaded) {
@@ -57,10 +65,11 @@ const Write = () => {
 		const formData = new FormData(e.target)
 
 		const data = {
+			img: cover.filePath || '',
 			title: formData.get('title'),
 			category: formData.get('category'),
 			desc: formData.get('desc'),
-			content: quillRef.current.root.innerHTML,
+			content: value,
 		}
 		console.log(data)
 
@@ -75,9 +84,14 @@ const Write = () => {
 				className='flex flex-col gap-6 flex-1 mb-6'
 				action=''
 			>
-				<button className='w-max p-2 shadow-md rounded-xl text-sm text-gray-500 bg-white/80'>
-					Add a cover image
-				</button>
+				<Upload type='image' setProgress={setProgress} setData={setCover}>
+					<button
+						type='button'
+						className='w-max p-2 shadow-md rounded-xl text-sm text-gray-500 bg-white/80'
+					>
+						{cover ? 'Cover image added 👍' : 'Add a cover image'}
+					</button>
+				</Upload>
 				<input
 					className='text-4xl font-semibold bg-transparent outline-none'
 					type='text'
@@ -106,15 +120,31 @@ const Write = () => {
 					name='desc'
 					placeholder='A short description'
 				/>
-				<div className='flex-1 rounded-xl bg-white shadow-md'>
-					<div ref={editorRef}></div>
+				<div className='flex flex-1 gap-2'>
+					<div className='flex flex-col gap-2'>
+						<Upload type='image' setProgress={setProgress} setData={setImg}>
+							🖼️
+						</Upload>
+						<Upload type='video' setProgress={setProgress} setData={setVideo}>
+							▶️
+						</Upload>
+					</div>
+					<ReactQuill
+						theme='snow'
+						className='flex-1 rounded-xl bg-white shadow-md'
+						value={value}
+						onChange={setValue}
+						readOnly={0 < progress && progress < 100}
+					/>
 				</div>
 				<button
-					disabled={mutation.isPending}
+					type='submit'
+					disabled={mutation.isPending || (0 < progress && progress < 100)}
 					className='bg-blue-800 text-white font-medium rounded-xl p-2 w-36 disabled:bg-blue-400 disabled:cursor-not-allowed'
 				>
 					{mutation.isPending ? 'Loading...' : 'Send'}
 				</button>
+				{progress > 0 && 'Progress: ' + progress}
 				{mutation.isError && <span>{mutation.error.message}</span>}
 			</form>
 		</main>
