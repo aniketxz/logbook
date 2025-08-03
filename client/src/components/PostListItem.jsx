@@ -1,40 +1,34 @@
 import { Link } from 'react-router-dom'
 import LazyImage from './LazyImage'
+import { format } from 'timeago.js'
 
-const PostListItem = () => {
+const PostListItem = ({ post }) => {
 	return (
-		<article className='flex flex-col xl:flex-row gap-8'>
+		<article className='flex flex-col xl:flex-row gap-8 mb-12'>
 			{/* image */}
-			<div className='md:hidden xl:block xl:w-1/3'>
-				<LazyImage
-					src='/postImg.jpeg'
-					w={735}
-					className='rounded-2xl object-cover'
-				/>
-			</div>
+			{post.img && (
+				<div className='md:hidden xl:block xl:w-1/3'>
+					<LazyImage
+						src={post.img}
+						w={735}
+						className='rounded-2xl object-cover'
+					/>
+				</div>
+			)}
 			{/* details */}
 			<div className='flex flex-col gap-4 xl:w-2/3'>
-				<Link to='/test' className='text-4xl font-semibold'>
-					Lorem ipsum dolor sit amet, consectetur adipisicing elit. At, labore
-					necessitatibus? Possimus?
+				<Link to={`/${post.slug}`} className='text-4xl font-semibold'>
+					{post.title}
 				</Link>
 				<div className='flex items-center gap-2 text-gray-400 text-sm'>
 					<span>Written by</span>
-					<Link className='text-blue-800'>John Doe</Link>
+					<span className='text-blue-800'>{post.user.username}</span>
 					<span>on</span>
-					<Link className='text-blue-800'>Web Design</Link>
-					<span>2 days ago</span>
+					<span className='text-blue-800'>{post.category}</span>
+					<span>{format(post.createdAt)}</span>
 				</div>
-				<p>
-					Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-					Reprehenderit laudantium eligendi reiciendis quae illo dolores
-					voluptatibus soluta similique quibusdam et iusto voluptates quisquam
-					molestiae deserunt nesciunt, impedit provident. Quam numquam optio
-					obcaecati ad a, voluptas nostrum aspernatur deleniti, veniam
-					repellendus ipsum at sed enim excepturi, harum perspiciatis temporibus
-					ullam corrupti.
-				</p>
-				<Link to='/test' className='underline text-sm text-blue-800'>
+				<p>{post.desc}</p>
+				<Link to={`/${post.slug}`} className='underline text-sm text-blue-800'>
 					Read More
 				</Link>
 			</div>
