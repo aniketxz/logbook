@@ -1,35 +1,49 @@
-import { Link } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import LazyImage from '../components/LazyImage'
 import PostMenuActions from '../components/PostMenuActions'
 import Search from '../components/Search'
 import Comments from '../components/Comments'
+import { useQuery } from '@tanstack/react-query'
+import axios from 'axios'
+import { format } from 'timeago.js'
 
-const SinglePost = () => {
+const fetchPost = async (slug) => {
+	const res = await axios.get(`${import.meta.env.VITE_API_URL}/posts/${slug}`)
+	return res.data
+}
+
+const SinglePost = ({ post }) => {
+	const { slug } = useParams()
+
+	const { isPending, error, data } = useQuery({
+		queryKey: ['post', slug],
+		queryFn: () => fetchPost(slug),
+	})
+
+	if (isPending) return 'Loading...'
+	if (error) return 'Something went wrong!' + error.message
+	if (!data) return 'Post not found!'
+
 	return (
 		<main className='flex flex-col gap-8'>
 			{/* detail */}
 			<div className='flex gap-8'>
 				<div className='lg:w-3/5 flex flex-col gap-8'>
 					<h1 className='text-xl md:text-3xl xl:text-4xl 2xl:5xl font-semibold'>
-						Lorem ipsum dolor sit amet consectetur adipisicing elit. Sequi rerum
-						nemo molestias.
+						{data.title}
 					</h1>
 					<div className='flex items-center gap-2 text-gray-400 text-sm'>
 						<span>Written by</span>
-						<Link className='text-blue-800'>John Doe</Link>
+						<Link className='text-blue-800'>{data.user.username}</Link>
 						<span>on</span>
-						<Link className='text-blue-800'>Web Design</Link>
-						<span>2 days ago</span>
+						<Link className='text-blue-800'>{data.category}</Link>
+						<span>{format(data.createdAt)}</span>
 					</div>
-					<p className='text-gray-500 font-medium'>
-						Lorem ipsum dolor sit, amet consectetur adipisicing elit. Et tempora
-						perspiciatis cupiditate suscipit optio, error neque saepe sequi
-						facere vel.
-					</p>
+					<p className='text-gray-500 font-medium'>{data.desc}</p>
 				</div>
-				<div className='hidden lg:block w-2/5'>
-					<LazyImage src='postImg.jpeg' w='600' className='rounded-2xl' />
-				</div>
+				{data.img && <div className='hidden lg:block w-2/5'>
+					<LazyImage src={data.img} w='600' className='rounded-md' />
+				</div>}
 			</div>
 			{/* content */}
 			<div className='flex flex-col md:flex-row gap-12'>
@@ -122,13 +136,13 @@ const SinglePost = () => {
 					<h2 className='mb-4 text-sm font-medium'>Author</h2>
 					<div className='flex flex-col gap-4'>
 						<div className='flex items-center gap-8'>
-							<LazyImage
-								src='userImg.jpeg'
+							{data.user.img && <LazyImage
+								src={data.user.img}
 								className='size-12 rounded-full object-cover'
 								w='48'
 								h='48'
-							/>
-							<Link className='text-blue-800'>John Doe</Link>
+							/>}
+							<Link className='text-blue-800'>{data.user.username}</Link>
 						</div>
 						<p className='text-sm text-gray-500'>
 							Lorem ipsum dolor sit amet consectetur adipisicing elit. Ducimus,
@@ -167,7 +181,7 @@ const SinglePost = () => {
 					<Search />
 				</div>
 			</div>
-			<Comments />
+			<Comments postId={data._id} />
 		</main>
 	)
 }
