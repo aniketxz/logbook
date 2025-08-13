@@ -1,24 +1,23 @@
-import LazyImage from './LazyImage'
+import { format } from 'timeago.js'
 
-const Comment = () => {
+const Comment = ({ comment, postId }) => {
 	return (
-		<div className='p-4 bg-slate-50 rounded-xl mb-8'>
+		<div className='p-4 bg-slate-50 rounded-xl mb-4'>
 			<div className='flex items-center gap-4'>
-				<LazyImage
-					src='userImg.jpeg'
-					w='40'
-					className='size-10 rounded-full object-cover'
-				/>
-				<span className='font-medium'>John Doe</span>
-				<span className='text-sm text-gray-500'>2 days ago</span>
+				{comment.user.img && (
+					<img
+						src={comment.user.img}
+						w='40'
+						className='size-10 rounded-full object-cover'
+					/>
+				)}
+				<span className='font-medium'>{comment.user.username}</span>
+				<span className='text-sm text-gray-500'>
+					{format(comment.createdAt)}
+				</span>
 			</div>
 			<div className='mt-4'>
-				<p>
-					Lorem ipsum dolor sit, amet consectetur adipisicing elit. Sed,
-					molestias minus? Esse assumenda veritatis facere. Corrupti vero
-					obcaecati aspernatur tempore eligendi iste aut sunt amet? Similique
-					odio incidunt minima eveniet?
-				</p>
+				<p>{comment.desc}</p>
 			</div>
 		</div>
 	)

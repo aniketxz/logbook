@@ -66,7 +66,7 @@ export const deletePost = async (req, res) => {
 
 	const user = await User.findOne({ clerkUserId })
 
-	const deletedPost = await Post.findByIdAndDelete({
+	const deletedPost = await Post.findOneAndDelete({
 		_id: req.params.id,
 		user: user._id,
 	})
@@ -75,7 +75,7 @@ export const deletePost = async (req, res) => {
 		return res.status(403).json('You can delete only your posts!')
 	}
 
-	res.status(200).json('Post has been deleted')
+	res.status(200).json('Post has been deleted!')
 }
 
 const imagekit = new ImageKit({

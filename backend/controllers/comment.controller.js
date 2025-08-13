@@ -10,7 +10,7 @@ export const getPostComments = async (req, res) => {
 }
 
 export const addComment = async (req, res) => {
-	const clerkUserId = req.auth.userId
+	const clerkUserId = req.auth().userId
 	const postId = req.params.postId
 
 	if (!clerkUserId) {
@@ -18,6 +18,10 @@ export const addComment = async (req, res) => {
 	}
 
 	const user = await User.findOne({ clerkUserId })
+
+	if (!user) {
+		return res.status(404).json({ message: 'User not found!' })
+	}
 
 	const newComment = new Comment({
 		...req.body,
@@ -27,7 +31,9 @@ export const addComment = async (req, res) => {
 
 	const savedComment = await newComment.save()
 
-	res.status(201).json(savedComment)
+	setTimeout(() => {
+		res.status(201).json(savedComment)
+	}, 3000)
 }
 
 export const deleteComment = async (req, res) => {

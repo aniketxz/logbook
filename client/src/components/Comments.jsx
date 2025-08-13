@@ -39,7 +39,7 @@ const Comments = ({ postId }) => {
 			queryClient.invalidateQueries({ queryKey: ['comments', postId] })
 		},
 		onError: (error) => {
-			toast.error(error.response.data)
+			toast.error(error.message)
 		},
 	})
 
@@ -59,7 +59,7 @@ const Comments = ({ postId }) => {
 			<h1 className='text-xl text-gray-500 underline'>Comments</h1>
 			<form
 				onSubmit={handleSubmit}
-				className='flex items-center justify-between gap-8 w-full mb-10'
+				className='flex items-center justify-between gap-8 w-full mb-8'
 			>
 				<textarea
 					name='desc'
@@ -70,9 +70,30 @@ const Comments = ({ postId }) => {
 					Send
 				</button>
 			</form>
-			{data?.map((comment) => (
-				<Comment key={comment._id} comment={comment} postId={postId} />
-			))}
+			{isPending ? (
+				'Loading...'
+			) : error ? (
+				'Error loading comments!'
+			) : (
+				<>
+					{mutation.isPending && (
+						<Comment
+							comment={{
+								desc: `${mutation.variables.desc} (Sending...)`,
+								createdAt: new Date(),
+								user: {
+									img: user.imageUrl,
+									username: user.username,
+								},
+							}}
+						/>
+					)}
+
+					{data.map((comment) => (
+						<Comment key={comment._id} comment={comment} postId={postId} />
+					))}
+				</>
+			)}
 		</div>
 	)
 }

@@ -26,10 +26,12 @@ export const clerkWebHook = async (req, res) => {
 	// console.log(evt.data)
 
 	if (evt.type === 'user.created') {
+		const emailId = evt.data.email_addresses[0].email_address
+
 		const newUser = new User({
 			clerkUserId: evt.data.id,
-			username: evt.data.username || evt.data.email_addresses[0].email_address,
-			email: evt.data.email_addresses[0].email_address,
+			username: evt.data.username || emailId.slice(0, emailId.indexOf('@')),
+			email: emailId,
 			img: evt.data.profile_img_url,
 		})
 
@@ -45,5 +47,5 @@ export const clerkWebHook = async (req, res) => {
 		await Comment.deleteMany({ user: deletedUser._id })
 	}
 
-	return res.status(200).json({ message: 'Webhook received' })
+	res.status(200).json({ message: 'Webhook received' })
 }

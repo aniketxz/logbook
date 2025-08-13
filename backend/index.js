@@ -29,7 +29,7 @@ app.use(function (req, res, next) {
 // })
 
 // app.get('/auth-state', (req, res) => {
-// 	const authState = req.auth()
+// 	const authState = getAuth(req)
 // 	res.json(authState)
 // })
 

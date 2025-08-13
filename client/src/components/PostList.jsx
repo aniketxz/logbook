@@ -3,8 +3,10 @@ import { useInfiniteQuery } from '@tanstack/react-query'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import axios from 'axios'
 
+const BASE_URL = import.meta.env.VITE_API_URL
+
 const fetchPosts = async (pageParam) => {
-	const res = await axios.get(`${import.meta.env.VITE_API_URL}/posts`, {
+	const res = await axios.get(`${BASE_URL}/posts`, {
 		params: { page: pageParam, limit: 2 },
 	})
 	return res.data
@@ -34,8 +36,6 @@ const PostList = () => {
 	if (status === 'error') return 'Something went wrong!'
 
 	const allPosts = data?.pages?.flatMap((page) => page.posts) || []
-
-	console.log(data)
 
 	return (
 		<InfiniteScroll
