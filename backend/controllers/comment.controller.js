@@ -1,4 +1,5 @@
 import Comment from '../models/comment.model.js'
+import Post from '../models/post.model.js'
 import User from '../models/user.model.js'
 
 export const getPostComments = async (req, res) => {
@@ -31,8 +32,6 @@ export const addComment = async (req, res) => {
 
 	const savedComment = await newComment.save()
 
-	// setTimeout(() => {
-	// }, 3000)
 	res.status(201).json(savedComment)
 }
 
@@ -42,6 +41,13 @@ export const deleteComment = async (req, res) => {
 
 	if (!clerkUserId) {
 		return res.status(401).json('Not authenticated!')
+	}
+
+	const role = req.auth().sessionClaims?.metadata?.role || 'user'
+
+	if (role === 'admin') {
+		await Comment.findByIdAndDelete(req.params.id)
+		return res.status(200).json('Comment has been deleted')
 	}
 
 	const user = User.findOne({ clerkUserId })
