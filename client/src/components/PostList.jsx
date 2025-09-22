@@ -3,25 +3,17 @@ import { useInfiniteQuery } from '@tanstack/react-query'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import axios from 'axios'
 
-const BASE_URL = import.meta.env.VITE_API_URL
+const API_URL = import.meta.env.VITE_API_URL
 
 const fetchPosts = async (pageParam) => {
-	const res = await axios.get(`${BASE_URL}/posts`, {
+	const res = await axios.get(`${API_URL}/posts`, {
 		params: { page: pageParam, limit: 2 },
 	})
 	return res.data
 }
 
 const PostList = () => {
-	const {
-		data,
-		error,
-		fetchNextPage,
-		hasNextPage,
-		isFetching,
-		isFetchingNextPage,
-		status,
-	} = useInfiniteQuery({
+	const { data, fetchNextPage, hasNextPage, status } = useInfiniteQuery({
 		queryKey: ['posts'],
 		queryFn: ({ pageParam = 1 }) => fetchPosts(pageParam),
 		initialPageParam: 1,

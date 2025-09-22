@@ -12,7 +12,7 @@ const fetchPost = async (slug) => {
 	return res.data
 }
 
-const SinglePost = ({ post }) => {
+const SinglePost = () => {
 	const { slug } = useParams()
 
 	const { isPending, error, data } = useQuery({
@@ -157,7 +157,7 @@ const SinglePost = ({ post }) => {
 							</Link>
 						</div>
 					</div>
-					<PostMenuActions />
+					<PostMenuActions post={data} />
 					<h3 className='mt-8 mb-4 text-sm font-medium'>Categories</h3>
 					<div className='flex flex-col gap-2 text-sm'>
 						<Link className='underline'>All</Link>

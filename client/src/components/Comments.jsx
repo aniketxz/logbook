@@ -79,7 +79,7 @@ const Comments = ({ postId }) => {
 					{mutation.isPending && (
 						<Comment
 							comment={{
-								desc: `${mutation.variables.desc} (Sending...)`,
+								desc: `${mutation.variables.desc} (Posting...)`,
 								createdAt: new Date(),
 								user: {
 									img: user.imageUrl,

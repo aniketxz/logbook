@@ -61,5 +61,5 @@ app.use((error, req, res, next) => {
 
 app.listen(3000, () => {
 	connectDB()
-	console.log('Server is running!')
+	console.log('Server live at http://localhost:3000')
 })

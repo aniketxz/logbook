@@ -31,9 +31,9 @@ export const addComment = async (req, res) => {
 
 	const savedComment = await newComment.save()
 
-	setTimeout(() => {
-		res.status(201).json(savedComment)
-	}, 3000)
+	// setTimeout(() => {
+	// }, 3000)
+	res.status(201).json(savedComment)
 }
 
 export const deleteComment = async (req, res) => {

@@ -9,6 +9,8 @@ import 'react-quill-new/dist/quill.snow.css'
 import ReactQuill from 'react-quill-new'
 
 const Write = () => {
+	const BASE_URL = import.meta.env.VITE_API_URL
+
 	const { isLoaded, isSignedIn } = useUser()
 	const { getToken } = useAuth()
 
@@ -28,8 +30,6 @@ const Write = () => {
 				(prev) => prev + `<p><iframe class='ql-video' src='${video.url}'/></p>`
 			)
 	}, [video])
-
-	const BASE_URL = import.meta.env.VITE_API_URL
 
 	const navigate = useNavigate()
 
@@ -105,7 +105,7 @@ const Write = () => {
 					<select
 						name='category'
 						id='category'
-						className='p-2 rounded-xl bg-white/80 shadow-md'
+						className='p-2 rounded-xl bg-white/80 shadow-md outline-none'
 					>
 						<option value='general'>General</option>
 						<option value='web-design'>Web Design</option>
@@ -116,7 +116,7 @@ const Write = () => {
 					</select>
 				</div>
 				<textarea
-					className='p-4 rounded-xl bg-white/80 shadow-md'
+					className='p-4 rounded-xl bg-white/80 shadow-md outline-none'
 					name='desc'
 					placeholder='A short description'
 				/>
@@ -144,7 +144,7 @@ const Write = () => {
 				>
 					{mutation.isPending ? 'Loading...' : 'Send'}
 				</button>
-				{progress > 0 && 'Progress: ' + progress}
+				{progress > 0 && progress < 100 && 'Progress: ' + progress}
 				{mutation.isError && <span>{mutation.error.message}</span>}
 			</form>
 		</main>

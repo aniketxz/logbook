@@ -3,16 +3,15 @@ import { useRef } from 'react'
 import toast from 'react-hot-toast'
 
 const Upload = ({ children, type, setProgress, setData }) => {
+	const BASE_URL = import.meta.env.VITE_API_URL
 	const IK_PUBLIC_KEY = import.meta.env.VITE_IMAGEKIT_PUBLIC_KEY
-  const IK_URL_ENDPOINT = import.meta.env.VITE_IMAGEKIT_URL_ENDPOINT
-  
-  const uploadRef = useRef(null)
+	const IK_URL_ENDPOINT = import.meta.env.VITE_IMAGEKIT_URL_ENDPOINT
+
+	const uploadRef = useRef(null)
 
 	const authenticator = async () => {
 		try {
-			const response = await fetch(
-				`${import.meta.env.VITE_API_URL}/posts/upload-auth`
-			)
+			const response = await fetch(`${BASE_URL}/posts/upload-auth`)
 
 			if (!response.ok) {
 				const errorText = await response.text()
@@ -55,12 +54,14 @@ const Upload = ({ children, type, setProgress, setData }) => {
 				useUniqueFileName
 				onError={onError}
 				onSuccess={onSuccess}
-        onUploadProgress={onUploadProgress}
-        className='hidden'
-        ref={uploadRef}
-        accept={`${type}/*`}
-      />
-      <div className='cursor-pointer' onClick={() => uploadRef.current.click()}>{children}</div>
+				onUploadProgress={onUploadProgress}
+				className='hidden'
+				ref={uploadRef}
+				accept={`${type}/*`}
+			/>
+			<div className='cursor-pointer' onClick={() => uploadRef.current.click()}>
+				{children}
+			</div>
 		</IKContext>
 	)
 }
