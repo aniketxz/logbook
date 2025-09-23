@@ -49,6 +49,10 @@ app.use('/users', userRouter)
 app.use('/posts', postRouter)
 app.use('/comments', commentRouter)
 
+app.use('/', (req, res) => {
+	res.send('Api working')
+})
+
 app.use((error, req, res, next) => {
 	res.status(error.status || 500)
 
