@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import Search from './Search'
 // import Search from "./Search";
 
 const MainCategories = () => {
@@ -45,7 +46,7 @@ const MainCategories = () => {
       </div>
       <span className="text-xl font-medium">|</span>
       {/* search */}
-      {/* <Search/> */}
+      <Search />
     </div>
   );
 };

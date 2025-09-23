@@ -34,7 +34,7 @@ const Search = () => {
         name='search'
         aria-label='Search posts'
 				placeholder='Search a post...'
-				className='bg-transparent'
+				className='bg-transparent outline-none'
 				onKeyDown={handleKeyPress}
 			/>
 		</div>
