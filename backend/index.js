@@ -9,6 +9,8 @@ import cors from 'cors'
 
 const app = express()
 
+await connectDB()
+
 app.use(cors(process.env.CLIENT_URL))
 app.use(clerkMiddleware())
 app.use('/webhooks', webhookRouter)
@@ -63,7 +65,8 @@ app.use((error, req, res, next) => {
 	})
 })
 
-app.listen(3000, () => {
-	connectDB()
-	console.log('Server live at http://localhost:3000')
+const PORT = process.env.PORT || 3000
+
+app.listen(PORT, () => {
+	console.log(`Server live at http://localhost:${PORT}`)
 })
